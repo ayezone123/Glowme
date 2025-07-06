@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="skincare-page">
+    <h2 class="heading">🌼 Skincare Tips for {{ skin_type.title() }} Skin</h2>
+
+    {% if tips %}
+        {% for tip in tips %}
+            <div class="tip-box">
+                🌸 {{ tip }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-tips">No specific tips found. Keep glowing! ✨</p>
+    {% endif %}
+
+    <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a>
+</div>
+{% endblock %}

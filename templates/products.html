@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="products-page">
+    <h2 class="heading">🌸 Recommended Products for {{ skin_type.title() }} Skin</h2>
+
+    {% if suggestions %}
+        <div class="products-grid">
+            {% for product in suggestions %}
+                <div class="product-card">
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.desc }}</p>
+                    <p class="price">{{ product.price }}</p>
+                    <a class="buy-btn" href="{{ product.link }}" target="_blank">Buy Now</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No products available for this skin type.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <ul>
+            <li><a href="#checkin">📝 Check-in</a></li>
+            <li><a href="#skincare-am">☀️ AM Skincare</a></li>
+            <li><a href="#skincare-pm">🌙 PM Skincare</a></li>
+            <li><a href="#activity">🌿 Wellness</a></li>
+            <li><a href="#goal">🎯 Goals</a></li>
+            <li> <a href="/predict_mood">🧠 Mood Predictor</a></li>  
+            <li> <a href="/mood_history" class="button">🧠 View Mood History</a></li>  
+
+</li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <h2>Welcome, {{ user.name }} ✨</h2>
+        <h4>Skin Type: {{ user.skin_type }}</h4>
+
+        <section id="checkin">
+            <h3>Today's Check-in</h3>
+            {% if checkin %}
+                <p>Mood: {{ checkin.mood }} | Energy: {{ checkin.energy }}</p>
+            {% else %}
+                <form method="POST" action="{{ url_for('daily_checkin') }}">
+                    <input type="text" name="mood" placeholder="Mood" required>
+                    <input type="text" name="energy" placeholder="Energy Level" required>
+                    <button type="submit">Check In</button>
+                </form>
+            {% endif %}
+        </section>
+
+        <section id="skincare-am">
+            <h3>☀️ AM Skincare Routine</h3>
+            <form method="POST" action="{{ url_for('add_skincare_step') }}">
+                <input type="hidden" name="routine_type" value="AM">
+                <input type="text" name="step_name" placeholder="Step Name (e.g., Cleanser, SPF)" required>
+                <input type="text" name="product_name" placeholder="Product Name" required>
+                <button type="submit">Add AM Step</button>
+            </form>
+            <div class="entries-list">
+                {% set am_steps_found = false %}
+                {% for step in steps %}
+                    {% if step.routine_type == 'AM' %}
+                        <p>
+                            {{ step.step_name }} - {{ step.product_name }}
+                            {# Adjusted delete button #}
+                            <form action="{{ url_for('delete_skincare_step', step_id=step.id) }}" method="POST" class="inline-delete-form">
+                                <button type="submit" class="delete-btn-icon" title="Delete Step">🗑️</button>
+                            </form>
+                        </p>
+                        {% set am_steps_found = true %}
+                    {% endif %}
+                {% endfor %}
+                {% if not am_steps_found %}
+                    <p class="no-entries">No AM steps added yet.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <section id="skincare-pm">
+            <h3>🌙 PM Skincare Routine</h3>
+            <form method="POST" action="{{ url_for('add_skincare_step') }}">
+                <input type="hidden" name="routine_type" value="PM">
+                <input type="text" name="step_name" placeholder="Step Name (e.g., Double Cleanse, Serum)" required>
+                <input type="text" name="product_name" placeholder="Product Name" required>
+                <button type="submit">Add PM Step</button>
+            </form>
+            <div class="entries-list">
+                {% set pm_steps_found = false %}
+                {% for step in steps %}
+                    {% if step.routine_type == 'PM' %}
+                        <p>
+                            {{ step.step_name }} - {{ step.product_name }}
+                            {# Adjusted delete button #}
+                            <form action="{{ url_for('delete_skincare_step', step_id=step.id) }}" method="POST" class="inline-delete-form">
+                                <button type="submit" class="delete-btn-icon" title="Delete Step">🗑️</button>
+                            </form>
+                        </p>
+                        {% set pm_steps_found = true %}
+                    {% endif %}
+                {% endfor %}
+                {% if not pm_steps_found %}
+                    <p class="no-entries">No PM steps added yet.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <section id="activity">
+            <h3>Log a Wellness Activity</h3>
+            <form method="POST" action="{{ url_for('add_activity') }}">
+                <select name="activity_type">
+                    <option>Yoga</option>
+                    <option>Meditation</option>
+                    <option>Reading</option>
+                    <option>Bubble Bath</option>
+                </select>
+                <input type="number" name="duration" placeholder="Duration in minutes">
+                <textarea name="notes" placeholder="Optional notes..."></textarea>
+                <button type="submit">Log Activity</button>
+            </form>
+            <div class="entries-list">
+                {% set activities_found = false %}
+                {% for activity in activities %}
+                    <p>
+                        {{ activity.activity_type }} - {{ activity.duration }} mins
+                        {# Adjusted delete button #}
+                        <form action="{{ url_for('delete_activity', activity_id=activity.id) }}" method="POST" class="inline-delete-form">
+                            <button type="submit" class="delete-btn-icon" title="Delete Activity">🗑️</button>
+                        </form>
+                    </p>
+                    {% set activities_found = true %}
+                {% endfor %}
+                {% if not activities_found %}
+                    <p class="no-entries">No activities logged yet.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <section id="goal">
+            <h3>Set a New Goal</h3>
+            <form method="POST" action="{{ url_for('add_goal') }}">
+                <input type="text" name="title" placeholder="Goal Title" required>
+                <textarea name="description" placeholder="Describe your goal"></textarea>
+                <button type="submit">Add Goal</button>
+            </form>
+            <div class="entries-list">
+                {% set goals_found = false %}
+                {% for goal in goals %}
+                    <p class="{% if goal.completed %}completed-goal{% endif %}">
+                        <form action="{{ url_for('toggle_goal_completion', goal_id=goal.id) }}" method="POST" style="display:inline-block; margin-right: 5px;">
+                            <input type="checkbox" onchange="this.form.submit()" {% if goal.completed %}checked{% endif %}>
+                        </form>
+                        {{ goal.title }} - {{ goal.description }}
+                        {# Adjusted delete button #}
+                        <form action="{{ url_for('delete_goal', goal_id=goal.id) }}" method="POST" class="inline-delete-form">
+                            <button type="submit" class="delete-btn-icon" title="Delete Goal">🗑️</button>
+                        </form>
+                    </p>
+                    {% set goals_found = true %}
+                {% endfor %}
+                {% if not goals_found %}
+                    <p class="no-entries">No goals set yet.</p>
+                {% endif %}
+            </div>
+        </section>
+
+    </main>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mood Predictor | GlowMe ✨</title>
+    <style>
+        body {
+            background-color: #fbe4f0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .mood-box {
+            background-color: #fef1f6;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .mood-box h2 {
+            color: #c94d91;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #e2c9d7;
+            border-radius: 10px;
+            font-size: 1rem;
+            resize: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #d96fa3;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #c05792;
+        }
+
+        .mood-result {
+            margin-top: 25px;
+            font-size: 1.2rem;
+            color: #6c3c66;
+        }
+    </style>
+</head>
+<body>
+    <div class="mood-box">
+        <h2>🧠 Mood Predictor</h2>
+        <form method="post" action="/predict_mood">
+            <textarea name="journal_entry" rows="5" placeholder="Write how you feel today..."></textarea><br>
+            <button type="submit">Analyze Mood</button>
+        </form>
+
+        {% if mood %}
+        <div class="mood-result">
+            <strong>Predicted Mood:</strong> {{ mood }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

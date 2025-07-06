@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mood History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fef2f6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #c94d91;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            background-color: #fbe4f0;
+            border-radius: 8px;
+        }
+        .date {
+            font-weight: bold;
+        }
+        .mood {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Your Mood History</h2>
+        {% if moods %}
+        <ul>
+            {% for mood in moods %}
+            <li>
+                <span class="date">{{ mood.date }}</span>
+                <span class="mood">{{ mood.mood }}</span><br>
+                {{ mood.entry }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No mood entries found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

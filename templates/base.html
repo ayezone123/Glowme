@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowMe</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+<body class="{{ body_class if body_class else '' }}">
+    <nav>
+        <a href="{{ url_for('dashboard') }}" class="logo">GlowMe ✨</a>
+        <div class="links">
+            {% if 'user_id' in session %}
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('skincare_page') }}">Skincare Tips</a>
+            <a href="{{ url_for('product_suggestions') }}">Product Suggestions</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('signup') }}">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {# Flash Messages Block - MUST be inside the body, usually right after nav #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    {# End Flash Messages Block #}
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        &copy; 2025 GlowMe ✨. Built with care for your glow!
+    </footer>
+</body>
+</html>
